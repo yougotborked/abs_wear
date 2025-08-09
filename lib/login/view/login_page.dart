@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:ui' as ui;
 
 import 'package:abs_wear/l10n/l10n.dart';
+import 'package:abs_wear/downloads/downloads.dart';
 import 'package:abs_wear/library/view/library_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -277,6 +278,24 @@ class LoginPageState extends State<LoginPage> {
           },
           child: Text(
             l10n.library,
+            style: theme.textTheme.bodyMedium,
+          ),
+        ),
+        const SizedBox(height: 8),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DownloadsPage(
+                  token: _token,
+                  serverUrl: serverUrlController.text,
+                ),
+              ),
+            );
+          },
+          child: Text(
+            l10n.downloads,
             style: theme.textTheme.bodyMedium,
           ),
         ),

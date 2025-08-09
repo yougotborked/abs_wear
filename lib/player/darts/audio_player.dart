@@ -288,6 +288,15 @@ class AudioPlayerController extends ChangeNotifier {
         }
         // Delete the zip file
         zipFile.deleteSync();
+
+        // Save metadata for offline listing
+        final metaFile = File('$folderPath/meta.json');
+        await metaFile.writeAsString(
+          jsonEncode(<String, String>{
+            'id': libraryItemId,
+            'title': bookTitle,
+          }),
+        );
       }
       await Fluttertoast.showToast(
         msg: 'Audiobook downloaded!',
