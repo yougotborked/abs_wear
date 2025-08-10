@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../helpers/helpers.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   group('$AmbientModeListener', () {
     test('updates when ambient mode is activated', () {
       final listener = AmbientModeListener.instance..value = false;
