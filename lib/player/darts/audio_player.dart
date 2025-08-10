@@ -4,7 +4,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:archive/archive.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -273,30 +272,28 @@ class AudioPlayerController extends ChangeNotifier {
         print('Unzipping the file');
       }
 
-      // Unzip the file
+      // Unzip the file using the system "unzip" command
       if (_isZipFile(zipFile)) {
-        final bytes = zipFile.readAsBytesSync();
-        final archive = ZipDecoder().decodeBytes(bytes);
-        for (final file in archive) {
-          final filename = '$folderPath/${file.name}';
-          if (file.isFile) {
-            final data = file.content as List<int>;
-            File(filename)
-              ..createSync(recursive: true)
-              ..writeAsBytesSync(data);
+        final result = await Process.run(
+          'unzip',
+          <String>['-o', zipFile.path, '-d', folderPath],
+        );
+        if (result.exitCode == 0) {
+          zipFile.deleteSync();
+
+          // Save metadata for offline listing
+          final metaFile = File('$folderPath/meta.json');
+          await metaFile.writeAsString(
+            jsonEncode(<String, String>{
+              'id': libraryItemId,
+              'title': bookTitle,
+            }),
+          );
+        } else {
+          if (kDebugMode) {
+            print('Error unzipping file: ${result.stderr}');
           }
         }
-        // Delete the zip file
-        zipFile.deleteSync();
-
-        // Save metadata for offline listing
-        final metaFile = File('$folderPath/meta.json');
-        await metaFile.writeAsString(
-          jsonEncode(<String, String>{
-            'id': libraryItemId,
-            'title': bookTitle,
-          }),
-        );
       }
       await Fluttertoast.showToast(
         msg: 'Audiobook downloaded!',
