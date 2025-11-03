@@ -3,13 +3,13 @@
 import 'dart:convert';
 import 'dart:ui' as ui;
 
+import 'package:abs_wear/core/toast.dart';
 import 'package:abs_wear/l10n/l10n.dart';
 import 'package:abs_wear/downloads/downloads.dart';
 import 'package:abs_wear/library/view/library_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:rotary_scrollbar/rotary_scrollbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -95,10 +95,10 @@ class LoginPageState extends State<LoginPage> {
           _token = token;
         });
       } else {
-        await Fluttertoast.showToast(
-          msg: 'Wrong username or password.',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
+        await ToastService.showToast(
+          message: 'Wrong username or password.',
+          length: ToastLength.short,
+          gravity: ToastGravity.center,
         );
       }
     } catch (e) {
@@ -106,10 +106,10 @@ class LoginPageState extends State<LoginPage> {
       if (kDebugMode) {
         print(e);
       }
-      await Fluttertoast.showToast(
-        msg: 'Error with URL',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
+      await ToastService.showToast(
+        message: 'Error with URL',
+        length: ToastLength.short,
+        gravity: ToastGravity.center,
       );
     }
   }
